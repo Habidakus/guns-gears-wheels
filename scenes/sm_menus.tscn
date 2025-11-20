@@ -1,0 +1,116 @@
+[gd_scene load_steps=6 format=3 uid="uid://nv5yws762yit"]
+
+[ext_resource type="Script" uid="uid://da4jmxbeqpsyh" path="res://addons/statemachine/StateMachine.gd" id="1_7vmlh"]
+[ext_resource type="Script" uid="uid://bs4m4jymtese3" path="res://scripts/sms_splash_page.gd" id="2_4h7lo"]
+[ext_resource type="FontFile" uid="uid://c0xhrhx6ettdv" path="res://fonts/Smashed.ttf" id="3_81b8q"]
+[ext_resource type="Script" uid="uid://cfwv1w01lwr2y" path="res://addons/statemachine/StateMachineState.gd" id="4_4h7lo"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_py244"]
+font = ExtResource("3_81b8q")
+font_size = 80
+
+[node name="StateMachine" type="Node" node_paths=PackedStringArray("initial_state")]
+script = ExtResource("1_7vmlh")
+initial_state = NodePath("SplashPage")
+metadata/_custom_type_script = "uid://da4jmxbeqpsyh"
+
+[node name="SplashPage" type="Control" parent="." node_paths=PackedStringArray("label_guns", "label_gears", "label_wheels", "next_state")]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_4h7lo")
+label_guns = NodePath("L_Guns")
+label_gears = NodePath("L_Gears")
+label_wheels = NodePath("L_Wheels")
+next_state = NodePath("../MainMenu")
+metadata/_custom_type_script = "uid://cmo4rd026j7ny"
+
+[node name="ColorRect" type="ColorRect" parent="SplashPage"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="L_Guns" type="Label" parent="SplashPage"]
+layout_mode = 0
+offset_left = 187.0
+offset_top = 219.0
+offset_right = 501.0
+offset_bottom = 299.0
+text = "Guns,"
+label_settings = SubResource("LabelSettings_py244")
+
+[node name="L_Gears" type="Label" parent="SplashPage"]
+layout_mode = 0
+offset_left = 260.0
+offset_top = 297.0
+offset_right = 639.0
+offset_bottom = 377.0
+text = "Gears,"
+label_settings = SubResource("LabelSettings_py244")
+
+[node name="L_Wheels" type="Label" parent="SplashPage"]
+layout_mode = 0
+offset_left = 329.0
+offset_top = 374.0
+offset_right = 1007.0
+offset_bottom = 454.0
+text = "and Wheels"
+label_settings = SubResource("LabelSettings_py244")
+
+[node name="MainMenu" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("4_4h7lo")
+metadata/_custom_type_script = "uid://cfwv1w01lwr2y"
+
+[node name="ColorRect" type="ColorRect" parent="MainMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainMenu"]
+layout_mode = 1
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -45.0
+offset_right = 45.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="PlayGame" type="Button" parent="MainMenu/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_81b8q")
+theme_override_font_sizes/font_size = 32
+text = "Play Game"
+
+[node name="ColorRect" type="ColorRect" parent="MainMenu/VBoxContainer/PlayGame"]
+self_modulate = Color(0.39215687, 0.39215687, 0.39215687, 0.39215687)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.3515629, 0.3515629, 0.35156286, 1)
+
+[connection signal="button_up" from="MainMenu/VBoxContainer/PlayGame" to="MainMenu" method="_on_play_game_button_up"]
