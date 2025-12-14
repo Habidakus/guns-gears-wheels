@@ -2,13 +2,13 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://dsu335qfivl7o"
-path="res://.godot/imported/Radar01.wav-caee67a704749dd3148f121922933043.sample"
+uid="uid://d3koxsgaup4u"
+path="res://.godot/imported/Beam_29.wav-d84ee2e9e17476348d6fdc9dcb1bc50a.sample"
 
 [deps]
 
-source_file="res://audio/Scan/Radar01.wav"
-dest_files=["res://.godot/imported/Radar01.wav-caee67a704749dd3148f121922933043.sample"]
+source_file="res://audio/Beam/Beam_29.wav"
+dest_files=["res://.godot/imported/Beam_29.wav-d84ee2e9e17476348d6fdc9dcb1bc50a.sample"]
 
 [params]
 
