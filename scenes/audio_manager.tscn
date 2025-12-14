@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://bopgweix7eqph"]
 
 [ext_resource type="Script" uid="uid://dqc3mhtyf18i" path="res://scripts/audio_manager.gd" id="1_3asnw"]
-[ext_resource type="AudioStream" uid="uid://baum5hec44xv8" path="res://audio/BigGun01.wav" id="2_m6ggh"]
-[ext_resource type="AudioStream" uid="uid://djvsm3jlk1wga" path="res://audio/BigGun02.wav" id="3_aoitu"]
+[ext_resource type="AudioStream" uid="uid://baum5hec44xv8" path="res://audio/BigGun/BigGun01.wav" id="2_m6ggh"]
+[ext_resource type="AudioStream" uid="uid://djvsm3jlk1wga" path="res://audio/BigGun/BigGun02.wav" id="3_aoitu"]
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_njtn3"]
 streams_count = 2
