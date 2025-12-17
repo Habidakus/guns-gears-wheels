@@ -78,9 +78,13 @@ func _ready() -> void:
 	print("Y Dir = ", str(y_plus_one_local_coords - center_hex_local_coords))
 
 func _process(delta: float) -> void:
-	for m : Node2D in _models:
+	for m : VisibleUnit in _models:
 	#	m.rotation += (delta / 3)
-		m.UpdateDots(_map_ground)
+		if _current_action != null && _current_action.Unit != null:
+			if _current_action.Unit == m.Unit:
+				m.UpdateDots(_map_ground, _current_action.Move, Color.PINK)
+				continue
+		m.UpdateDots(_map_ground, m.Unit.Velocity, Color.GREEN_YELLOW)
 	_camera.zoom = _camera.zoom.lerp(_camera_target_zoom, delta)
 	pass
 
