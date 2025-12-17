@@ -1,8 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://dmcy4gjyy4w13"]
+[gd_scene load_steps=3 format=3 uid="uid://dmcy4gjyy4w13"]
 
 [ext_resource type="Texture2D" uid="uid://c87tck7k74wq6" path="res://art/Motorcycle.png" id="1_37xmq"]
+[ext_resource type="Script" uid="uid://o80spdtslly6" path="res://code/VisibleUnit.cs" id="1_sbb3e"]
 
 [node name="Node2D" type="Node2D"]
+script = ExtResource("1_sbb3e")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(-8, 0)
