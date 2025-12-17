@@ -1,9 +1,13 @@
-[gd_scene load_steps=6 format=3 uid="uid://i7vqub3nvthk"]
+[gd_scene load_steps=10 format=3 uid="uid://i7vqub3nvthk"]
 
 [ext_resource type="Script" uid="uid://dorqyvrb04185" path="res://scripts/gameplay.gd" id="1_t0gj1"]
 [ext_resource type="Script" uid="uid://crwpcnv0as4ea" path="res://scripts/sms_load.gd" id="2_t0gj1"]
 [ext_resource type="Script" uid="uid://cfwv1w01lwr2y" path="res://addons/statemachine/StateMachineState.gd" id="3_0gj54"]
 [ext_resource type="Script" uid="uid://ba6n2cdjwpnen" path="res://scripts/sms_create_map.gd" id="3_t0gj1"]
+[ext_resource type="Script" uid="uid://qak5lwt52t6c" path="res://scripts/sms_present_game.gd" id="4_0gj54"]
+[ext_resource type="Script" uid="uid://dfqfd60hhvoql" path="res://scripts/sms_request_player_move.gd" id="5_hw80c"]
+[ext_resource type="Script" uid="uid://bvafguygtag3c" path="res://scripts/sms_await_player_move.gd" id="6_h3bd8"]
+[ext_resource type="Script" uid="uid://dsy8riuuclc62" path="res://scripts/sms_handle_player_move.gd" id="7_6yrvd"]
 
 [sub_resource type="TileSet" id="TileSet_t0gj1"]
 tile_shape = 3
@@ -41,7 +45,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("3_0gj54")
+script = ExtResource("4_0gj54")
 metadata/_custom_type_script = "uid://cfwv1w01lwr2y"
 
 [node name="State_RequestPlayerMove" type="Control" parent="."]
@@ -51,7 +55,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("3_0gj54")
+script = ExtResource("5_hw80c")
 metadata/_custom_type_script = "uid://cfwv1w01lwr2y"
 
 [node name="State_AwaitPlayerMove" type="Control" parent="."]
@@ -61,7 +65,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("3_0gj54")
+script = ExtResource("6_h3bd8")
 metadata/_custom_type_script = "uid://cfwv1w01lwr2y"
 
 [node name="State_HandlePlayerMove" type="Control" parent="."]
@@ -71,7 +75,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("3_0gj54")
+script = ExtResource("7_6yrvd")
 metadata/_custom_type_script = "uid://cfwv1w01lwr2y"
 
 [node name="State_ProcessGameEnd" type="Control" parent="."]

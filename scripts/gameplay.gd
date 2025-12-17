@@ -1,6 +1,7 @@
 class_name GamePlay extends StateMachine
 
 var _game_board : GameBoard
+var _current_action : UnitAction
 var _players : Array[PlayerController]
 var _current_player_index : int = 0
 
@@ -19,6 +20,41 @@ var _camera_target_zoom : Vector2 = Vector2.ONE
 const _min_zoom : Vector2 = Vector2(0.1, 0.1)
 const _max_zoom : Vector2 = Vector2(10, 10)
 
+func RegisterAction(action : UnitAction) -> void:
+	_current_action = action
+	switch_state("State_HandlePlayerMove")
+
+const _model_move_speed : float = 45
+func UpdateVisibleGameBoard(_delta : float) -> void:
+	if _current_action.IsNoOp():
+		_advance_to_next_player()
+		return
+		
+	var moving_unit : Unit = _current_action.Unit
+	var dest_hex : Vector2i = moving_unit.Location + _current_action.Move
+	var dest_local_pos : Vector2 = _map_ground.map_to_local(dest_hex)
+	var travel_dist : float = _model_move_speed * _delta
+	for v : VisibleUnit in _models:
+		if v.Unit == moving_unit:
+			var squared_dist_to = v.position.distance_squared_to(dest_local_pos)
+			if squared_dist_to > (travel_dist * travel_dist):
+				var mov = (dest_local_pos - v.position).normalized() * travel_dist
+				v.position += mov
+			else:
+				v.position = dest_local_pos
+				var nextDest : Vector2i = _map_ground.map_to_local(dest_hex + _current_action.Move)
+				v.look_at(nextDest)
+				#moving_unit.Update(_current_action)
+				_advance_to_next_player()
+			return
+
+func _advance_to_next_player() -> void:
+	_game_board.ApplyAction(_current_action)
+	_current_action = null
+	_current_player_index = 1 - _current_player_index
+	CenterCamera()
+	switch_state("State_RequestPlayerMove")
+	
 func _input(event: InputEvent) -> void:
 	if event.is_pressed():
 		if event is InputEventMouseButton:
@@ -30,6 +66,7 @@ func _input(event: InputEvent) -> void:
 
 func _ready() -> void:
 	_game_board = GameBoard.new()
+	assert(_game_board != null)
 	var screen_center_world = get_viewport().get_visible_rect().get_center()
 	var local_coord = _map_ground.to_local(screen_center_world)
 	_initial_center_hex_coord = _map_ground.local_to_map(local_coord)
@@ -58,10 +95,12 @@ func CenterCamera() -> void:
 	_camera_target.position = _map_ground.map_to_local(hex_to_target)
 
 func RegisterPlayer(pc : PlayerController) -> void:
+	assert(_game_board != null)
 	assert(_players.size() < 2)
 	_players.append(pc)
 
 func RegisterUnit(pc: PlayerController, mt : ModelType, loc : Vector2i, vel : Vector2i) -> void:
+	assert(_game_board != null)
 	#print("Center Hex Coords: ", _initial_center_hex_coord)
 	var unit : Unit = _game_board.AddUnit(pc, mt, loc + _initial_center_hex_coord, vel)
 	var visual_model : VisibleUnit

@@ -1,11 +1,12 @@
 using Godot;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
 [GlobalClass]
 public partial class ModelType : GodotObject
 {
-	static ModelType s_motorcycle = new ModelType([
+	static ModelType s_motorcycle = new ModelType("Motorcycle", 5, [
 		new Vector2I(0,0),
 		new Vector2I(-1, 0),
 	]);
@@ -14,7 +15,7 @@ public partial class ModelType : GodotObject
 		return s_motorcycle;
 	}
 
-	static ModelType s_car = new ModelType([
+	static ModelType s_car = new ModelType("Car", 7, [
 		new Vector2I(1, -1),
 		new Vector2I(0,-1),
 		new Vector2I(-1, -1),
@@ -35,7 +36,7 @@ public partial class ModelType : GodotObject
 		return s_car;
 	}
 
-	static ModelType s_sidecar = new ModelType([
+	static ModelType s_sidecar = new ModelType("Sidecar", 6, [
 		new Vector2I(0,0),
 		new Vector2I(-1, 0),
 		new Vector2I(-1, 1),
@@ -49,8 +50,13 @@ public partial class ModelType : GodotObject
 	public static ModelType EighteenWheeler;
 
 	public Vector2I[] OccupiedOffsets { get; private set; } = [new Vector2I(0, 0)];
-	private ModelType(Vector2I[] occupiedOffsets)
+	public int TurnWait { get; }
+	public string Name { get; }
+
+	private ModelType(string name, int turnWait, Vector2I[] occupiedOffsets)
 	{
+		Name = name;
+		TurnWait = turnWait;
 		OccupiedOffsets = occupiedOffsets;
 	}
 
@@ -72,8 +78,6 @@ public partial class ModelType : GodotObject
 			case 1:
 				foreach (Vector2I offset in OccupiedOffsets)
 				{
-					// NOTE: We're flipping the sides here
-					//yield return origin + new Vector2I(offset.Y, offset.X);
 					yield return origin + new Vector2I(-offset.Y, offset.X + offset.Y);
 				}
 				break;
@@ -92,8 +96,6 @@ public partial class ModelType : GodotObject
 			case 4:
 				foreach (Vector2I offset in OccupiedOffsets)
 				{
-					// NOTE: We're flipping the sides here
-					//yield return origin - new Vector2I(offset.Y, offset.X);
 					yield return origin + new Vector2I(offset.Y, - offset.X - offset.Y);
 				}
 				break;
@@ -104,5 +106,16 @@ public partial class ModelType : GodotObject
 				}
 				break;
 		}
+	}
+
+	internal IEnumerable<Vector2I> GetMoves(Vector2I velocity)
+	{
+		yield return velocity;
+		yield return velocity + new Vector2I(1, 0);  // 0
+		yield return velocity + new Vector2I(0, 1);  // 1
+		yield return velocity + new Vector2I(-1, 1); // 2
+		yield return velocity + new Vector2I(-1, 0); // 3
+		yield return velocity + new Vector2I(0, -1); // 4
+		yield return velocity + new Vector2I(1, -1); // 5
 	}
 }
