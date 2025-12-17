@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://bsl22wkehckfm"]
+
+[ext_resource type="Script" uid="uid://o80spdtslly6" path="res://code/VisibleUnit.cs" id="1_pe7i1"]
+[ext_resource type="Texture2D" uid="uid://3svbqs0uadw5" path="res://art/Sidecar.png" id="2_pe7i1"]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_pe7i1")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(-8, 0)
+texture = ExtResource("2_pe7i1")
