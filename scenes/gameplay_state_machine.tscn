@@ -86,3 +86,9 @@ metadata/_custom_type_script = "uid://cfwv1w01lwr2y"
 
 [node name="Map_Ground" type="TileMapLayer" parent="."]
 tile_set = SubResource("TileSet_t0gj1")
+
+[node name="CameraTarget" type="Marker2D" parent="Map_Ground"]
+
+[node name="Camera2D" type="Camera2D" parent="Map_Ground/CameraTarget"]
+position_smoothing_enabled = true
+position_smoothing_speed = 1.0

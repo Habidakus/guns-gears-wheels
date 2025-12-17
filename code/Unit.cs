@@ -10,6 +10,7 @@ public partial class Unit : RefCounted
 	public ModelType Model { get; private set; }
 	public Vector2I Location { get; set; }
 	public Vector2I Velocity { get; set; }
+	public bool IsAlive => true;
 
 	internal Unit(PlayerController owner, ModelType model, Vector2I loc, Vector2I velocity)
 	{

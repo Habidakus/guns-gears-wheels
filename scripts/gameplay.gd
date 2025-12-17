@@ -8,9 +8,25 @@ var _current_player_index : int = 0
 # Map Y -> (+8, +12)
 @onready var _map_ground : TileMapLayer = $Map_Ground
 @onready var _motorcycle_scene : PackedScene = preload("res://scenes/visible_motorcycle.tscn")
+@onready var _sidecar_scene : PackedScene = preload("res://scenes/visible_sidecar.tscn")
 @onready var _car_scene : PackedScene = preload("res://scenes/visible_car.tscn")
+@onready var _camera_target : Marker2D = $Map_Ground/CameraTarget
+@onready var _camera : Camera2D = $Map_Ground/CameraTarget/Camera2D
 var _initial_center_hex_coord : Vector2i
-var _models : Array[Node2D]
+var _models : Array[VisibleUnit]
+@export var _camera_zoom_speed : float = 0.1
+var _camera_target_zoom : Vector2 = Vector2.ONE
+const _min_zoom : Vector2 = Vector2(0.1, 0.1)
+const _max_zoom : Vector2 = Vector2(10, 10)
+
+func _input(event: InputEvent) -> void:
+	if event.is_pressed():
+		if event is InputEventMouseButton:
+			if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+				_camera_target_zoom *= (1.0 + _camera_zoom_speed)
+			elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+				_camera_target_zoom *= (1.0 - _camera_zoom_speed)
+			_camera_target_zoom = _camera_target_zoom.clamp(_min_zoom, _max_zoom)
 
 func _ready() -> void:
 	_game_board = GameBoard.new()
@@ -26,8 +42,20 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	for m : Node2D in _models:
-		m.rotation += (delta / 3)
+	#	m.rotation += (delta / 3)
 		m.UpdateDots(_map_ground)
+	_camera.zoom = _camera.zoom.lerp(_camera_target_zoom, delta)
+	pass
+
+func CenterCamera() -> void:
+	var total_coords : Vector2 = Vector2.ZERO
+	var count : int = 0
+	for m : VisibleUnit in _models:
+		if m.Unit.IsAlive:
+			total_coords += _map_ground.map_to_local(m.Unit.Location + m.Unit.Location + m.Unit.Velocity)
+			count += 2
+	var hex_to_target : Vector2i = _map_ground.local_to_map(total_coords / count)
+	_camera_target.position = _map_ground.map_to_local(hex_to_target)
 
 func RegisterPlayer(pc : PlayerController) -> void:
 	assert(_players.size() < 2)
@@ -40,7 +68,7 @@ func RegisterUnit(pc: PlayerController, mt : ModelType, loc : Vector2i, vel : Ve
 	if mt == ModelType.GetMotorcycle():
 		visual_model = _motorcycle_scene.instantiate() # = unit.CreateVisualModel()
 	elif mt == ModelType.GetSidecar():
-		visual_model = _motorcycle_scene.instantiate() # = unit.CreateVisualModel()
+		visual_model = _sidecar_scene.instantiate() # = unit.CreateVisualModel()
 	else:
 		visual_model = _car_scene.instantiate() # = unit.CreateVisualModel()
 	visual_model.position = _map_ground.map_to_local(unit.Location)

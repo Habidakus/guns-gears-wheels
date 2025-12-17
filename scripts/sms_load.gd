@@ -13,6 +13,7 @@ func enter_state() -> void:
 	GetGamePlay().RegisterUnit(player_1, ModelType.GetMotorcycle(), Vector2i(-9, 0), Vector2i(10, 0))
 	GetGamePlay().RegisterUnit(player_1, ModelType.GetSidecar(), Vector2i(-11, 4), Vector2i(10, 0))
 	GetGamePlay().RegisterUnit(player_2, ModelType.GetCar(), Vector2i(8, 0), Vector2i(0, 8))
+	GetGamePlay().CenterCamera()
 	_running = true
 
 func exit_state(next_state: StateMachineState) -> void:
