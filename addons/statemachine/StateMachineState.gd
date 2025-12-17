@@ -41,6 +41,3 @@ func exit_state(_next_state: StateMachineState) -> void:
 	self.hide()
 	state_exit.emit()
 	_on_complete_callback.call()
-
-func _on_play_game_button_up() -> void:
-	our_state_machine.switch_state("SplashPage")

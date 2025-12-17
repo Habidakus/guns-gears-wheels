@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://da4jmxbeqpsyh" path="res://addons/statemachine/StateMachine.gd" id="1_7vmlh"]
 [ext_resource type="Script" uid="uid://bs4m4jymtese3" path="res://scripts/sms_splash_page.gd" id="2_4h7lo"]
 [ext_resource type="FontFile" uid="uid://c0xhrhx6ettdv" path="res://fonts/Smashed.ttf" id="3_81b8q"]
-[ext_resource type="Script" uid="uid://cfwv1w01lwr2y" path="res://addons/statemachine/StateMachineState.gd" id="4_4h7lo"]
+[ext_resource type="Script" uid="uid://b2exff36letmq" path="res://scripts/sms_main_menu.gd" id="4_4h7lo"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_py244"]
 font = ExtResource("3_81b8q")

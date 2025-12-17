@@ -1,0 +1,87 @@
+[gd_scene load_steps=6 format=3 uid="uid://i7vqub3nvthk"]
+
+[ext_resource type="Script" uid="uid://dorqyvrb04185" path="res://scripts/gameplay.gd" id="1_t0gj1"]
+[ext_resource type="Script" uid="uid://crwpcnv0as4ea" path="res://scripts/sms_load.gd" id="2_t0gj1"]
+[ext_resource type="Script" uid="uid://cfwv1w01lwr2y" path="res://addons/statemachine/StateMachineState.gd" id="3_0gj54"]
+[ext_resource type="Script" uid="uid://ba6n2cdjwpnen" path="res://scripts/sms_create_map.gd" id="3_t0gj1"]
+
+[sub_resource type="TileSet" id="TileSet_t0gj1"]
+tile_shape = 3
+
+[node name="StateMachine" type="Node" node_paths=PackedStringArray("initial_state")]
+script = ExtResource("1_t0gj1")
+initial_state = NodePath("State_Load")
+metadata/_custom_type_script = "uid://da4jmxbeqpsyh"
+
+[node name="State_Load" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_t0gj1")
+metadata/_custom_type_script = "uid://cfwv1w01lwr2y"
+
+[node name="State_CreateMap" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_t0gj1")
+metadata/_custom_type_script = "uid://cfwv1w01lwr2y"
+
+[node name="State_PresentGame" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_0gj54")
+metadata/_custom_type_script = "uid://cfwv1w01lwr2y"
+
+[node name="State_RequestPlayerMove" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_0gj54")
+metadata/_custom_type_script = "uid://cfwv1w01lwr2y"
+
+[node name="State_AwaitPlayerMove" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_0gj54")
+metadata/_custom_type_script = "uid://cfwv1w01lwr2y"
+
+[node name="State_HandlePlayerMove" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_0gj54")
+metadata/_custom_type_script = "uid://cfwv1w01lwr2y"
+
+[node name="State_ProcessGameEnd" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_0gj54")
+metadata/_custom_type_script = "uid://cfwv1w01lwr2y"
+
+[node name="Map_Ground" type="TileMapLayer" parent="."]
+tile_set = SubResource("TileSet_t0gj1")
