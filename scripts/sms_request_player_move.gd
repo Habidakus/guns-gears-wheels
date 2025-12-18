@@ -12,7 +12,7 @@ func _process(_delta: float) -> void:
 			var game = GetGamePlay()
 			var current_player : PlayerController = game.GetCurrentPlayer()
 			game._game_board.SetCurrentPlayer(current_player)
-			print("Requesting moves from %s for %s" % [current_player.Name, game._game_board.GetCurrentUnit().Name])
+			#print("Requesting moves from %s for %s" % [current_player.Name, game._game_board.GetCurrentUnit().Name])
 			current_player.RequestMove(game._game_board, Callable(game, "RegisterAction"))
 			_sent_request = true
 			our_state_machine.switch_state("State_AwaitPlayerMove")

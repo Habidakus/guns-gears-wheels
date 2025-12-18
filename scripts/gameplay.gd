@@ -22,10 +22,10 @@ const _max_zoom : Vector2 = Vector2(10, 10)
 
 func RegisterAction(action : UnitAction) -> void:
 	_current_action = action
-	print("RegisterAction(%s)" % [action.Name])
+	#print("RegisterAction(%s)" % [action.Name])
 	switch_state("State_HandlePlayerMove")
 
-const _model_move_speed : float = 45
+const _model_move_speed : float = 75
 func UpdateVisibleGameBoard(_delta : float) -> void:
 	if _current_action.IsNoOp():
 		_advance_to_next_player()
@@ -50,9 +50,19 @@ func UpdateVisibleGameBoard(_delta : float) -> void:
 				_advance_to_next_player()
 			return
 
+func GetVisibleUnitById(id : int) -> VisibleUnit:
+	for v : VisibleUnit in _models:
+		if v.Unit.Id == id:
+			return v
+	return null
+
 func _advance_to_next_player() -> void:
-	print("Advancing")
-	_game_board.ApplyAction(_current_action)
+	if not _current_action.IsNoOp():
+		_game_board.ApplyAction(_current_action)
+		#var unit : Unit = _game_board.GetUnitById(_current_action.UnitId)
+		#var vu : VisibleUnit = GetVisibleUnitById(_current_action.UnitId)
+		#print("GB: %s is now at %s" % [unit.Name, unit.Location])
+		#print("VU: %s is now at %s" % [vu.Unit.Name, vu.Unit.Location])
 	_current_action = null
 	_current_player_index = 1 - _current_player_index
 	CenterCamera()

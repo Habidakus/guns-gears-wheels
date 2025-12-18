@@ -26,12 +26,12 @@ public partial class PlayerController_AI : PlayerController
 			throw new Exception("Current player is null");
 		if (unit.Owner != this)
 		{
-			GD.Print("Wrong owner, submitting no-op action");
 			_callback?.Call(UnitAction.NoOp);
+			_callback = null;
 			return;
 		}
 
-		_request = new(gameBoard, depth: 1, TimeSpan.FromSeconds(0.1));
+		_request = new(gameBoard, depth: 7, TimeSpan.FromSeconds(0.1));
 	}
 
 	public override void ProcessMove(float timeoutSpan)
@@ -41,7 +41,7 @@ public partial class PlayerController_AI : PlayerController
 			woelib.NegaMax.IResponse response = woelib.NegaMax.Calculator.GetBestAction(_request);
 			if (response is woelib.NegaMax.PausedResponse pausedResponse)
 			{
-				GD.Print("Got pause Response");
+				//GD.Print("Got pause Response");
 				_request = pausedResponse.ContinuationRequest;
 			}
 			else if (response is woelib.NegaMax.ResolvedResponse resolvedResponse)
@@ -49,9 +49,8 @@ public partial class PlayerController_AI : PlayerController
 				UnitAction chosen_action = resolvedResponse.Action as UnitAction;
 				if (chosen_action != null)
 				{
-					GD.Print($"{Name} submitting action {chosen_action.Name}");
+					GD.Print($"{Name} submitting action {chosen_action.Name} with score: {resolvedResponse.Score}");
 					_callback?.Call(chosen_action);
-					chosen_action = null;
 					_callback = null;
 					_request = null;
 				}

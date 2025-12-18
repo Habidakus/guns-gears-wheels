@@ -39,8 +39,6 @@ public partial class Unit : RefCounted
 
 	internal Unit(PlayerController owner, TileMapLayer mapLayer, ModelType model, Vector2I loc, Vector2I velocity)
 	{
-		if (loc.X >= 64)
-			throw new Exception($"Setting {Name} {Location}");
 		Id = ++s_nextId;
 		Owner = owner;
 		Model = model;
@@ -56,8 +54,6 @@ public partial class Unit : RefCounted
 		Owner = cloneParent.Owner;
 		Model = cloneParent.Model;
 		Location = new Vector2I(cloneParent.Location.X, cloneParent.Location.Y);
-		if (Location.X >= 64)
-			throw new Exception($"Cloning {Name} {Location}");
 		Velocity = new Vector2I(cloneParent.Velocity.X, cloneParent.Velocity.Y);
 		NextTurn = cloneParent.NextTurn;
 		Rotation = cloneParent.Rotation;
@@ -65,10 +61,7 @@ public partial class Unit : RefCounted
 
 	public void Update(TileMapLayer mapLayer, UnitAction action)
 	{
-		var pl = Location;
-		Location = action.Move;
-		if (Location.X >= 74)
-			throw new Exception($"{Name} {pl}->{Location} via {action.Move}");
+		Location = Location + action.Move;
 		Velocity = action.Move;
 		NextTurn += Model.TurnWait;
 		Rotation = CalculateRotation(mapLayer);
