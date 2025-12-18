@@ -47,6 +47,20 @@ public partial class VisibleUnit : Node2D
 		var unit_local_pos = ToLocal(_map.ToGlobal(unit_map_pos));
 		var dest_local_pos = ToLocal(_map.ToGlobal(destination_map_pos));
 
-		DrawDashedLine(unit_local_pos, dest_local_pos, (Colors.White + _color)/2, 1.5f, 8, aligned: true, antialiased: true);
+		DrawDashedLine(unit_local_pos, dest_local_pos, (Colors.White + _color) / 2, 1.5f, 8, aligned: true, antialiased: true);
+
+		Color weaponColor = new(Colors.Red, 0.5f);
+		foreach (Weapon w in Unit.Model.Weapons)
+		{
+			float range = 200f;
+			float startAngle = w.m_rotation - (w.m_totalArc / 2f);
+			float endAngle = w.m_rotation + (w.m_totalArc / 2f);
+			DrawArc(unit_local_pos, range, startAngle, endAngle, 12, weaponColor);
+
+			Vector2 startPoint = unit_local_pos + Vector2.Right.Rotated(startAngle) * range;
+			Vector2 endPoint = unit_local_pos + Vector2.Right.Rotated(endAngle) * range;
+			DrawLine(unit_local_pos, startPoint, weaponColor, 0.5f, antialiased: true);
+			DrawLine(unit_local_pos, endPoint, weaponColor, 0.5f, antialiased: true);
+		}
 	}
 }
