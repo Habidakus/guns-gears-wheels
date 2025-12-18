@@ -22,6 +22,7 @@ const _max_zoom : Vector2 = Vector2(10, 10)
 
 func RegisterAction(action : UnitAction) -> void:
 	_current_action = action
+	print("RegisterAction(%s)" % [action.Name])
 	switch_state("State_HandlePlayerMove")
 
 const _model_move_speed : float = 45
@@ -30,8 +31,9 @@ func UpdateVisibleGameBoard(_delta : float) -> void:
 		_advance_to_next_player()
 		return
 		
-	var moving_unit : Unit = _current_action.Unit
+	var moving_unit : Unit = _game_board.GetUnitById(_current_action.UnitId)
 	var dest_hex : Vector2i = moving_unit.Location + _current_action.Move
+	#print("%s moving from %s to %s via %s" % [moving_unit.Name, moving_unit.Location, dest_hex, _current_action.Move])
 	var dest_local_pos : Vector2 = _map_ground.map_to_local(dest_hex)
 	var travel_dist : float = _model_move_speed * _delta
 	for v : VisibleUnit in _models:
@@ -49,6 +51,7 @@ func UpdateVisibleGameBoard(_delta : float) -> void:
 			return
 
 func _advance_to_next_player() -> void:
+	print("Advancing")
 	_game_board.ApplyAction(_current_action)
 	_current_action = null
 	_current_player_index = 1 - _current_player_index
@@ -66,6 +69,7 @@ func _input(event: InputEvent) -> void:
 
 func _ready() -> void:
 	_game_board = GameBoard.new()
+	_game_board.SetMap(_map_ground)
 	assert(_game_board != null)
 	var screen_center_world = get_viewport().get_visible_rect().get_center()
 	var local_coord = _map_ground.to_local(screen_center_world)
@@ -80,8 +84,8 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	for m : VisibleUnit in _models:
 	#	m.rotation += (delta / 3)
-		if _current_action != null && _current_action.Unit != null:
-			if _current_action.Unit == m.Unit:
+		if _current_action != null && not _current_action.IsNoOp():
+			if _current_action.UnitId == m.Unit.Id:
 				m.UpdateDots(_map_ground, _current_action.Move, Color.PINK)
 				continue
 		m.UpdateDots(_map_ground, m.Unit.Velocity, Color.GREEN_YELLOW)
@@ -118,7 +122,7 @@ func RegisterUnit(pc: PlayerController, mt : ModelType, loc : Vector2i, vel : Ve
 	var nextDest : Vector2i = _map_ground.map_to_local(unit.Location + unit.Velocity)
 	visual_model.look_at(nextDest)
 	visual_model.SetUnit(unit)
-	print("Placing %s at %s aimed at %s" % [visual_model, visual_model.position, visual_model.rotation])
+	print("Placing %s (%s) at %s (%s) aimed at %s" % [visual_model, unit.Name, visual_model.position, unit.Location, visual_model.rotation])
 	_map_ground.add_child(visual_model)
 	_models.append(visual_model)
 

@@ -1,4 +1,5 @@
 extends GamePlayStateMachineState
 
 func _process(delta: float) -> void:
-	GetGamePlay().UpdateVisibleGameBoard(delta)
+	if _running:
+		GetGamePlay().UpdateVisibleGameBoard(delta)

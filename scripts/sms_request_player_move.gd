@@ -11,6 +11,7 @@ func _process(_delta: float) -> void:
 		if _sent_request == false:
 			var game = GetGamePlay()
 			var current_player : PlayerController = game.GetCurrentPlayer()
+			game._game_board.SetCurrentPlayer(current_player)
 			print("Requesting moves from %s for %s" % [current_player.Name, game._game_board.GetCurrentUnit().Name])
 			current_player.RequestMove(game._game_board, Callable(game, "RegisterAction"))
 			_sent_request = true

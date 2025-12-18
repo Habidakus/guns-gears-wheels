@@ -1,0 +1,127 @@
+using System;
+using System.Drawing;
+using System.Linq;
+
+namespace woelib.NegaMax
+{
+    ///<summary>
+    /// An generic alpha beta pruning tree to implement deterministic best move calculations.
+    ///
+    /// Every time you wish to have the artificial opponent take a turn, you'll need to supply the <see cref="Calculator.GetBestAction"/>
+    /// function with a representation of the current game state. To do this first create an extension
+    /// of the <see cref="INMGameState"/> interface which can hold within it a flyweight representation of the current state of the
+    /// game - your class will need to implement your own version of the three base functions of that class;
+    /// <see cref="INMGameState.Score"/>, <see cref="INMGameState.SortedMoves"/>, and <see cref="INMGameState.CreateChild"/>.
+    /// Next you'll need to implement the <see cref="INMAction"/> interface and extend the <see cref="NMScore"/> class. Once you have all three,
+    /// you will be able to ask the <see cref="Calculator.GetBestAction"/> for an optimal move for the artificial opponent to take.
+    ///
+    /// This class is an implementation of https://en.wikipedia.org/wiki/Negamax
+    ///</summary>
+    public class Calculator
+    {
+        ///<summary>
+        /// Given a game state, calculate which potential action is the optimal next move. For very simple
+        /// game states with limited moves, the depth value can be omitted and the engine will attempt to
+        /// calculate the entire game tree. However for most interesting games (eg, not tic-tac-toe) you will
+        /// want to specify a maximum depth for the engine to consider, otherwise the search space will be
+        /// far too large and the game will appear to stop.
+        ///</summary>
+        public static INMAction? GetBestAction(INMGameState gameState, Int32 depth = Int32.MaxValue)
+        {
+            return GetBestAction_Internal(gameState, depth, NMScore.MinValue, NMScore.MaxValue, color: 1).action;
+        }
+
+        /// <summary>
+        /// For more complex requests, which might take more time to compute than is acceptable in a single frame,
+        /// you will want to craft a Request with an appropriate timeout value set. 
+        /// </summary>
+        /// <returns>
+        /// This function will either return a
+        /// <see cref="ResolvedResponse"/> or a <see cref="PausedResponse"/>. If a <see cref="PausedResponse"/> is returned, you can later resume
+        /// the calculation by passing the <see cref="PausedResponse.ContinuationRequest"/> value to <see cref="Calculator.GetBestAction"/>
+        /// again next frame. When the calculation is complete, a <see cref="ResolvedResponse"/> will be returned.
+        /// </returns>
+        public static IResponse GetBestAction(Request request)
+        {
+            if (request.Depth == 0)
+            {
+                return request.ExaustResponse;
+			}
+			if (request.GameState == null)
+			{
+				throw new Exception("What?");
+			}
+			if (!request.GameState.HasMoves)
+			{
+				return request.ExaustResponse;
+			}
+
+			NMScore bestScore = request.InitialBestScore;
+            INMAction? bestAction = request.InitialBestAction;
+            INMAction[] actions = request.SortedActions;
+            for (int index = 0; index < actions.Count(); ++index)
+            {
+                if (DateTime.Now >= request.ExpirationTime)
+                {
+                    return request.CreatePauseResponse(bestAction, bestScore, index / (float)actions.Count(), actions.AsSpan(index));
+                }
+
+                Request childRequest = request.CreateChild(index == 0, actions[index]);
+                IResponse childResponse = GetBestAction(childRequest);
+                if (childResponse is PausedResponse pr)
+                {
+                    return request.CreatePauseResponse(bestAction, bestScore, (index + pr.FractionCompleted) / (float)actions.Count(), actions.AsSpan(index), pr);
+                }
+
+                NMScore reversedScore = (childResponse as ResolvedResponse)!.Score.Reversed;
+                if (bestAction == null || NMScore.GreaterThan(reversedScore, bestScore))
+                {
+                    bestScore = reversedScore;
+                    bestAction = actions[index];
+                }
+
+                if (request.UpdateAlphaAndCheck(bestScore))
+                {
+                    break;
+                }
+            }
+
+            return new ResolvedResponse(bestAction, bestScore);
+        }
+
+        private static (NMScore score, INMAction? action) GetBestAction_Internal(INMGameState board, int depth, NMScore alpha, NMScore beta, int color)
+        {
+            if (depth == 0 || !board.HasMoves)
+            {
+                if (color > 0)
+                    return (board.Score, null);
+                else
+                    return (board.Score.Reversed, null);
+            }
+
+            NMScore bestScore = NMScore.MinValue;
+            INMAction? bestAction = null;
+
+            foreach (INMAction action in board.SortedMoves)
+            {
+                var child = board.CreateChild(action);
+
+                var childResult = GetBestAction_Internal(child, depth - 1, beta.Reversed, alpha.Reversed, 0 - color);
+                NMScore reversedScore = childResult.score.Reversed;
+                if (bestAction == null || NMScore.GreaterThan(reversedScore, bestScore))
+                {
+                    bestScore = reversedScore;
+                    bestAction = action;
+                }
+
+                alpha = NMScore.Max(alpha, bestScore);
+                if (NMScore.GreaterOrEqualTo(alpha, beta))
+                {
+                    break;
+                }
+            }
+
+            return (bestScore, bestAction);
+        }
+    }
+}
