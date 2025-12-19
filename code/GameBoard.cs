@@ -106,7 +106,8 @@ public partial class GameBoard : RefCounted, woelib.NegaMax.INMGameState
 	{
 		foreach (Vector2I move in unit.Model.GetMoves(unit.Velocity))
 		{
-			yield return new UnitAction(unit, move);
+			if (move != Vector2I.Zero)
+				yield return new UnitAction(unit, move);
 		}
 	}
 
