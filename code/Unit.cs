@@ -69,7 +69,10 @@ public partial class Unit : RefCounted
 
 	private float CalculateRotation(TileMapLayer mapLayer)
 	{
-		return mapLayer.MapToLocal(Vector2I.Zero).AngleTo(mapLayer.MapToLocal(Velocity));
+		var global_map_hex_zero = mapLayer.ToGlobal(mapLayer.MapToLocal(Vector2I.Zero));
+		var global_relative_velocity_hex = mapLayer.ToGlobal(mapLayer.MapToLocal(Velocity));
+		return (global_relative_velocity_hex - global_map_hex_zero).Angle();
+		//return mapLayer.MapToLocal(Vector2I.Zero).AngleTo(mapLayer.MapToLocal(Velocity));
 	}
 
 	internal Unit Clone()

@@ -13,12 +13,12 @@ public class Weapon
 
 	public bool CanHit(TileMapLayer mapLayer, Unit attacker, Unit defender, out float turnNeeded)
 	{
-		Vector2 attacker_loc = mapLayer.MapToLocal(attacker.Location);
+		Vector2 global_gun_pos = mapLayer.ToGlobal(mapLayer.MapToLocal(attacker.Location));
 		float rot = attacker.Rotation + m_rotation;
 		turnNeeded = float.MaxValue;
 		foreach (Vector2I hex in defender.AllHexes)
 		{
-			if (CanHit(attacker_loc, mapLayer.MapToLocal(hex), rot, out float hexTurnNeeded))
+			if (CanHit(global_gun_pos, mapLayer.ToGlobal(mapLayer.MapToLocal(hex)), rot, out float hexTurnNeeded))
 			{
 				turnNeeded = 0;
 				return true;
@@ -32,20 +32,26 @@ public class Weapon
 		return false;
 	}
 
-	public bool CanHit(Vector2 start, Vector2 end, float rot, out float turnNeeded)
+	public bool CanHit(TileMapLayer mapLayer, Unit attacker, Vector2I hex)
 	{
-		//if (start.DistanceSquaredTo(end) > (m_range * m_range))
-		//	return false;
-		float angle = start.AngleTo(end);
-		float away = Mathf.Abs(Mathf.AngleDifference(angle, rot));
-		if (away <= (m_totalArc / 2f))
+		Vector2 global_gun_pos = mapLayer.ToGlobal(mapLayer.MapToLocal(attacker.Location));
+		float rot = attacker.Rotation + m_rotation;
+		return CanHit(global_gun_pos, mapLayer.ToGlobal(mapLayer.MapToLocal(hex)), rot, out float _);
+	}
+
+	public bool CanHit(Vector2 start, Vector2 end, float angleGunIsAimedAt, out float turnNeeded)
+	{
+		float angleGunToTarget = (end - start).Angle();
+		float diff = Mathf.Abs(Mathf.Wrap(angleGunToTarget - angleGunIsAimedAt, -Mathf.Pi, Mathf.Pi));
+		// float away = Mathf.Abs(Mathf.AngleDifference(angle, rot));
+		if (diff <= (m_totalArc / 2f))
 		{
 			turnNeeded = 0;
 			return true;
 		}
 		else
 		{
-			turnNeeded = away - (m_totalArc / 2f);
+			turnNeeded = diff - (m_totalArc / 2f);
 			return false;
 		}
 	}
