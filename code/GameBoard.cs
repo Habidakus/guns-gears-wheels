@@ -13,6 +13,8 @@ public partial class GameBoard : RefCounted, woelib.NegaMax.INMGameState
 	private List<Unit> _units = new List<Unit>();
 	internal PlayerController CurrentPlayer { get { return _current_player; } }
 
+	public List<Unit> AllUnits { get { return _units; } }
+
 	public Unit AddUnit(PlayerController pc, ModelType mt, Vector2I loc, Vector2I vel)
 	{
 		Unit unit = new Unit(pc, _map_layer, mt, loc, vel);

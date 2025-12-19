@@ -13,6 +13,9 @@ public abstract partial class PlayerController : RefCounted
 		ID = ++s_nextAIId;
 	}
 
+	public Color MoveColor { get; protected set; }
+	public Color GunColor { get; protected set; }
+
 	public abstract void RequestMove(GameBoard gameBoard, Callable callback);
 	public abstract void ProcessMove(float timeoutSpan);
 }

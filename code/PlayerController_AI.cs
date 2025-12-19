@@ -14,6 +14,17 @@ public partial class PlayerController_AI : PlayerController
 	public PlayerController_AI()
 	{
 		Name = "AI Player #" + ID;
+		switch(ID % 2)
+		{
+			case 0:
+				MoveColor = Colors.DarkBlue;
+				GunColor = Colors.LightBlue;
+				break;
+			case 1:
+				MoveColor = Colors.DarkGreen;
+				GunColor = Colors.LightGreen;
+				break;
+		}
 	}
 
 	public override void RequestMove(GameBoard gameBoard, Callable callback)

@@ -96,9 +96,9 @@ func _process(delta: float) -> void:
 	#	m.rotation += (delta / 3)
 		if _current_action != null && not _current_action.IsNoOp():
 			if _current_action.UnitId == m.Unit.Id:
-				m.UpdateDots(_map_ground, _current_action.Move, Color.PINK)
+				m.UpdateDots(_map_ground, _current_action.Move, Color.PINK, Color.RED, _game_board)
 				continue
-		m.UpdateDots(_map_ground, m.Unit.Velocity, Color.GREEN_YELLOW)
+		m.UpdateDots(_map_ground, m.Unit.Velocity, m.Unit.Owner.MoveColor, m.Unit.Owner.GunColor, _game_board)
 	_camera.zoom = _camera.zoom.lerp(_camera_target_zoom, delta)
 	pass
 
