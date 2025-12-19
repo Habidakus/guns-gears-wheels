@@ -42,7 +42,7 @@ public partial class PlayerController_AI : PlayerController
 			return;
 		}
 
-		_request = new(gameBoard, depth: 7, TimeSpan.FromSeconds(0.1));
+		_request = new(gameBoard, depth: 7, TimeSpan.FromSeconds(0.05));
 	}
 
 	public override void ProcessMove(float timeoutSpan)
