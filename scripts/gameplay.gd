@@ -25,7 +25,7 @@ func RegisterAction(action : UnitAction) -> void:
 	#print("RegisterAction(%s)" % [action.Name])
 	switch_state("State_HandlePlayerMove")
 
-const _model_move_speed : float = 75
+const _model_move_speed : float = 100
 func UpdateVisibleGameBoard(_delta : float) -> void:
 	if _current_action.IsNoOp():
 		_advance_to_next_player()

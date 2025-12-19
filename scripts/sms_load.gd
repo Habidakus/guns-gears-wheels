@@ -10,7 +10,7 @@ func enter_state() -> void:
 	player_1.Opponent = player_2
 	player_2.Opponent = player_1
 	GetGamePlay().RegisterUnit(player_1, ModelType.GetMotorcycle(), Vector2i(-7, -4), Vector2i(10, 0))
-	GetGamePlay().RegisterUnit(player_1, ModelType.GetMotorcycle(), Vector2i(-9, 0), Vector2i(10, 0))
+	GetGamePlay().RegisterUnit(player_1, ModelType.GetMotorcycle(), Vector2i(-9, 0), Vector2i(-10, 0))
 	GetGamePlay().RegisterUnit(player_1, ModelType.GetSidecar(), Vector2i(-11, 4), Vector2i(10, 0))
 	GetGamePlay().RegisterUnit(player_2, ModelType.GetCar(), Vector2i(8, 0), Vector2i(0, 8))
 	GetGamePlay().CenterCamera()
