@@ -1,14 +1,10 @@
 using Godot;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 [GlobalClass]
 public partial class PlayerController_AI : PlayerController
 {
-	//RandomNumberGenerator rng = new RandomNumberGenerator();
 	Callable? _callback = null;
-	woelib.NegaMax.Calculator _calculator = new();
 	woelib.NegaMax.Request _request = null;
 
 	public PlayerController_AI()
@@ -42,7 +38,7 @@ public partial class PlayerController_AI : PlayerController
 			return;
 		}
 
-		_request = new(gameBoard, depth: 7, TimeSpan.FromSeconds(0.05));
+		_request = new(gameBoard, depth: 8, TimeSpan.FromSeconds(0.05));
 	}
 
 	public override void ProcessMove(float timeoutSpan)

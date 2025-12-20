@@ -88,9 +88,9 @@ public partial class VisibleUnit : Node2D
 
 			foreach (Unit enemy in _all_units.Where(a => a.Owner.Opponent == Unit.Owner))
 			{
-				if (w.CanHit(_map, Unit, enemy, out float _turnNeeded))
+				if (w.CanHit(_map, Unit, enemy, out float _turnNeeded, out Vector2I hexHit))
 				{
-					Vector2 enemy_map_local_pos = _map.MapToLocal(enemy.Location);
+					Vector2 enemy_map_local_pos = _map.MapToLocal(hexHit);
 					Vector2 enemy_global_pos = _map.ToGlobal(enemy_map_local_pos);
 					Vector2 enemy_local_pos = this.ToLocal(enemy_global_pos);
 					float millisecondFraction = 0.8f * DateTime.Now.Millisecond / 1000f;

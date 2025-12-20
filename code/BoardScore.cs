@@ -8,12 +8,14 @@ public class BoardScore : NMScore
 	PlayerController _player { get; }
 	int _weaponsReady = 0;
 	float _turnNeeded = 0;
+	int _xScore = 0;
 
-	private BoardScore(PlayerController player, int weaponsReady, float turnNeeded)
+	private BoardScore(PlayerController player, int weaponsReady, float turnNeeded, int xScore)
 	{
 		_player = player;
 		_weaponsReady = weaponsReady;
 		_turnNeeded = turnNeeded;
+		_xScore = xScore;
 	}
 
 	public BoardScore(PlayerController score_player, List<Unit> units, TileMapLayer mapLayer)
@@ -23,6 +25,14 @@ public class BoardScore : NMScore
 		{
 			if (!attacker.IsAlive)
 				continue;
+			if (attacker.Owner == _player)
+			{
+				if (_player.HasXGoal)
+				{
+					_xScore += attacker.Location.X;
+				}
+			}
+
 			foreach (Weapon weapon in attacker.Weapons)
 			{
 				float minTurnNeeded = float.MaxValue;
@@ -37,7 +47,7 @@ public class BoardScore : NMScore
 					if (attacker.Owner == target.Owner)
 						continue;
 
-					if (weapon.CanHit(mapLayer, attacker, target, out float turnNeeded))
+					if (weapon.CanHit(mapLayer, attacker, target, out float turnNeeded, out Vector2I _))
 					{
 						hasValidTarget = true;
 					}
@@ -60,14 +70,14 @@ public class BoardScore : NMScore
 				}
 				else
 				{
-					//if (hasValidTarget)
-					//{
-					//	_weaponsReady -= 1;
-					//}
-					//else
-					//{
-					//	_turnNeeded -= minTurnNeeded;
-					//}
+					if (hasValidTarget)
+					{
+						_weaponsReady -= 1;
+					}
+					else
+					{
+						_turnNeeded -= minTurnNeeded;
+					}
 				}
 			}
 		}
@@ -75,18 +85,34 @@ public class BoardScore : NMScore
 
 	public override string ToString()
 	{
-		return $"Score for {_player.Name}: {_weaponsReady}, {_turnNeeded}";
+		if (_player.HasXGoal)
+		{
+			return $"Score for {_player.Name}: {_xScore}, {_weaponsReady}, {_turnNeeded}";
+		}
+		else
+		{
+			return $"Score for {_player.Name}: {_weaponsReady}, {_turnNeeded}";
+		}
 	}
 
 	protected override NMScore CreateReverse()
 	{
-		return new BoardScore(_player, 0 -  _weaponsReady, 0 - _turnNeeded);
+		return new BoardScore(_player, 0 -  _weaponsReady, 0 - _turnNeeded, 0 - _xScore);
 	}
 
 	protected override bool IsGreaterThan(NMScore other)
 	{
+
 		if (other is BoardScore otherScore)
 		{
+			if (_player.HasXGoal)
+			{
+				if (_xScore != otherScore._xScore)
+				{
+					return _xScore > otherScore._xScore;
+				}
+			}
+
 			if (_weaponsReady != otherScore._weaponsReady)
 			{
 				return _weaponsReady > otherScore._weaponsReady;
