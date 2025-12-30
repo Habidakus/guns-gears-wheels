@@ -1,0 +1,25 @@
+Terrain:
+   Road - allow all six deltas
+   Sand - only allow forward acceleration if not turn last impulse.
+   Rough - impact damage above speed X
+   Ice - only allow delta if no delta previous impulse
+
+Vehicles:
+   Max speed by terrain type
+
+Combat:
+   Damage applied after movement, prorated by length of vehicle impulses
+   Pistols can only fire if driver delta did not change
+
+Impact:
+   Strength measured in all opposing vectors. Eg; 0,0 vs 5,-1 is 6; -1,-3 vs 1, -2 is 3
+   Another way of calculating damage in collisions is take the two movement vectors (M1, M2) and the total energy in the collision should be dist(M1) + dist(M2) - dist(M1 + M2).
+
+Vehicle Structure:
+   Each facing has armor
+   Each car component has hp (weapons, driver, gunner, car itself) and a list of facings
+   Damage comes off of highest hp component first
+
+Test:
+   Double check that at various distances (say, 11,12,13) all hexes in a radius around the origin, if used as a destination, have three hexes at +1 distance and three hexes with -1 distance.
+
